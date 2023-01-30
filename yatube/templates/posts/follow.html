@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Посты Ваших любимых авторов{% endblock %}
+
+<body>
+  {% block content %}
+    <div class="container">
+      <h1>Последние посты Ваших любимых авторов</h1>
+      {% include 'posts/includes/switcher.html' %}
+      {% for post in page_obj %}
+        {% include 'posts/includes/post_order.html' %}
+      {% endfor %}  
+      {% include 'posts/includes/paginator.html' %} 
+    </div>      
+  {% endblock %}
+</body>

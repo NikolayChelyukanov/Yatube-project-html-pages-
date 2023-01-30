@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Об авторе проекта{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
+      <h1>Николай Челюканов</h1>
+        <p>
+          Я закончил МГТУ им. Н.Э. Баумана в 2014 году.
+          После окончания университета работаю специалистом по закупкам в автомобильной промышленности.
+          У меня есть любимая жена и маленький сын.
+        </p>
+        <p>
+          Сейчас я изучаю back-end разработку на Python и это мой первый проект.
+        </p> 
+    </div> 
+    <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+      <img src= "{% static 'img/author.jpg' %}" width="180" height="180" >
+    </div>
+  </div>  
+</div>
+{% endblock %} 
