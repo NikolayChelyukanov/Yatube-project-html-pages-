@@ -4,7 +4,7 @@ import tempfile
 from http import HTTPStatus
 
 from django import forms
-from django.conf import settings
+from django.conf import settings as s
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -13,9 +13,8 @@ from django.urls import reverse
 
 from ..forms import PostForm
 from ..models import Follow, Group, Post
-from ..utilis import FIRST_PAGE_POSTS
 
-TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
+TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=s.BASE_DIR)
 
 User = get_user_model()
 
@@ -246,8 +245,8 @@ class PostViewTests(TestCase):
 
 
 class PaginatorViewsTest(TestCase):
-    TOTAL_POSTS = FIRST_PAGE_POSTS + 1
-    SECOND_PAGE_POSTS = TOTAL_POSTS - FIRST_PAGE_POSTS
+    TOTAL_POSTS = s.FIRST_PAGE_POSTS + 1
+    SECOND_PAGE_POSTS = TOTAL_POSTS - s.FIRST_PAGE_POSTS
 
     @classmethod
     def setUpClass(cls):
@@ -279,7 +278,7 @@ class PaginatorViewsTest(TestCase):
         for responce in url_pages:
             with self.subTest(responce=responce):
                 self.assertEqual(len(self.client.get(
-                    responce).context.get('page_obj')), FIRST_PAGE_POSTS)
+                    responce).context.get('page_obj')), s.FIRST_PAGE_POSTS)
                 self.assertEqual(len(self.client.get(
                     responce + '?page=2').context.get('page_obj')),
                     self.SECOND_PAGE_POSTS)

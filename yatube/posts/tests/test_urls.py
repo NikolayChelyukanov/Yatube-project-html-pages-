@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.test import Client, TestCase
 
-from ..models import Group, Post
+from ..models import Comment, Group, Post
 
 User = get_user_model()
 
@@ -23,6 +23,11 @@ class PostURLTest(TestCase):
         cls.post = Post.objects.create(
             text='Тестовый текст',
             author=cls.author,
+        )
+        cls.comment = Comment.objects.create(
+            post=cls.post,
+            author=cls.author,
+            text='Комментарий'
         )
 
     def setUp(self):
@@ -76,6 +81,7 @@ class PostURLTest(TestCase):
             f'/posts/{self.post.pk}/': 'posts/post_detail.html',
             f'/posts/{self.post.pk}/edit/': 'posts/create_post.html',
             '/create/': 'posts/create_post.html',
+            '/follow/': 'posts/follow.html'
         }
         for address, template in templates_url_names.items():
             with self.subTest(address=address):

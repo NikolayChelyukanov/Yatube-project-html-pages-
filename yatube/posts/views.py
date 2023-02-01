@@ -4,36 +4,29 @@ from django.views.decorators.cache import cache_page
 
 from .forms import CommentForm, PostForm
 from .models import Follow, Group, Post, User
-from .utilis import page_context
+from .utilis import get_page_obj
 
 
 @cache_page(20, key_prefix="index_page")
 def index(request):
-    page_obj = page_context(Post.objects.all(), request)
+    page_obj = get_page_obj(
+        Post.objects.select_related('author', 'group').all(), request)
     context = {'page_obj': page_obj}
     return render(request, 'posts/index.html', context)
 
 
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
-    page_obj = page_context(group.posts.all(), request)
+    page_obj = get_page_obj(group.posts.all(), request)
     context = {'page_obj': page_obj, 'group': group}
     return render(request, 'posts/group_list.html', context)
 
 
 def profile(request, username):
     author = User.objects.get(username=username)
-    page_obj = page_context(Post.objects.filter(author=author), request)
-    if request.user.is_authenticated and Follow.objects.filter(
-            author=author, user=request.user).exists():
-        following = True
-        context = {
-            'page_obj': page_obj,
-            'author': author,
-            'following': following
-        }
-        return render(request, 'posts/profile.html', context)
-    following = False
+    page_obj = get_page_obj(Post.objects.filter(author=author), request)
+    following = (request.user.is_authenticated and Follow.objects.filter(
+                 author=author, user=request.user).exists())
     context = {
         'page_obj': page_obj,
         'author': author,
@@ -98,7 +91,7 @@ def add_comment(request, post_id):
 
 @login_required
 def follow_index(request):
-    page_obj = page_context(
+    page_obj = get_page_obj(
         Post.objects.filter(author__following__user=request.user), request)
     context = {'page_obj': page_obj}
     return render(request, 'posts/follow.html', context)
